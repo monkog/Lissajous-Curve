@@ -4,7 +4,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Canvas Name="m_canvas" >
-            <Ellipse Name="m_ellipse" Width="10" Height="10" Fill="Red" Canvas.Left="190" Canvas.Top="128" />
+            <Polyline Name="m_line" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Name="m_ellipse" Width="10" Height="10" Fill="Red"/>
         </Canvas>
     </Grid>
 </Window>
