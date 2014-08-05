@@ -22,6 +22,7 @@ namespace Lissajous
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Variables and Properties
         /// <summary>
         /// Width amplitude
         /// </summary>
@@ -39,6 +40,38 @@ namespace Lissajous
             set { SetValue(BProperty, value); }
         }
         /// <summary>
+        /// a value
+        /// </summary>
+        private int a
+        {
+            get { return (int)GetValue(aProperty); }
+            set { SetValue(aProperty, value); }
+        }
+        /// <summary>
+        /// b value
+        /// </summary>
+        private int b
+        {
+            get { return (int)GetValue(bProperty); }
+            set { SetValue(bProperty, value); }
+        }
+        /// <summary>
+        /// Fade value
+        /// </summary>
+        private int Fade
+        {
+            get { return (int)GetValue(FadeProperty); }
+            set { SetValue(FadeProperty, value); }
+        }
+        /// <summary>
+        /// Speed value
+        /// </summary>
+        private int Speed
+        {
+            get { return (int)GetValue(SpeedProperty); }
+            set { SetValue(SpeedProperty, value); }
+        }
+        /// <summary>
         /// Timer to keep track of moving Ellipse
         /// </summary>
         private DispatcherTimer m_timer;
@@ -46,11 +79,22 @@ namespace Lissajous
         /// Time phase 
         /// </summary>
         private double Phase { get; set; }
+        #endregion
 
+        #region DependencyProperties
         public static readonly DependencyProperty AProperty
             = DependencyProperty.Register("A", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static readonly DependencyProperty BProperty
             = DependencyProperty.Register("B", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static readonly DependencyProperty aProperty
+            = DependencyProperty.Register("a", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static readonly DependencyProperty bProperty
+            = DependencyProperty.Register("b", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static DependencyProperty FadeProperty
+            = DependencyProperty.Register("Fade", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static readonly DependencyProperty SpeedProperty
+            = DependencyProperty.Register("Speed", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        #endregion
 
         public MainWindow()
         {
@@ -63,13 +107,15 @@ namespace Lissajous
         /// </summary>
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            setBinding();
+            setAmplitudeBinding();
+            setSliderBindings();
             m_timer = new DispatcherTimer();
             m_timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             m_timer.Tick += m_timer_Tick;
             m_timer.Start();
 
             SizeChanged += MainWindow_SizeChanged;
+            m_speedSlider.ValueChanged += m_speedSlider_ValueChanged;
         }
 
         /// <summary>
@@ -79,6 +125,14 @@ namespace Lissajous
         {
             Phase += 0.01;
             moveEllipse();
+        }
+
+        /// <summary>
+        /// Updates time tick interval
+        /// </summary>
+        private void m_speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            //m_timer.Interval = TimeSpan.FromMilliseconds(e.NewValue);
         }
 
         /// <summary>
@@ -92,7 +146,7 @@ namespace Lissajous
         /// <summary>
         /// Sets binding to A and B
         /// </summary>
-        private void setBinding()
+        private void setAmplitudeBinding()
         {
             Binding aBinding = new Binding("ActualWidth");
             aBinding.Source = m_canvas;
@@ -108,6 +162,31 @@ namespace Lissajous
         }
 
         /// <summary>
+        /// Sets a, b, fade and speed bindings
+        /// </summary>
+        private void setSliderBindings()
+        {
+            setSimpleBinding(aProperty, "Value", m_aSlider);
+            setSimpleBinding(bProperty, "Value", m_bSlider);
+            setSimpleBinding(FadeProperty, "Value", m_fadeSlider);
+            setSimpleBinding(SpeedProperty, "Value", m_speedSlider);
+        }
+
+        /// <summary>
+        /// Universal function for setting a simple binding
+        /// </summary>
+        /// <param name="dp">Dependency property</param>
+        /// <param name="path">Binding path</param>
+        /// <param name="source">Binding source</param>
+        private void setSimpleBinding(DependencyProperty dp, string path, object source)
+        {
+            Binding binding = new Binding(path);
+            binding.Mode = BindingMode.OneWay;
+            binding.Source = source;
+            SetBinding(dp, binding);
+        }
+
+        /// <summary>
         /// Draws the curve and moves the ellipse
         /// </summary>
         /// <remarks>
@@ -119,8 +198,8 @@ namespace Lissajous
             double delta = ((B - 1) / B) * (Math.PI / 2);
             double x, y;
 
-            x = A * Math.Sin(2 * Phase + delta) + A;
-            y = B * Math.Sin(5 * Phase) + B;
+            x = A * Math.Sin(a * Phase + delta) + A;
+            y = B * Math.Sin(b * Phase) + B;
 
             Canvas.SetLeft(m_ellipse, x - m_ellipse.Width / 2);
             Canvas.SetTop(m_ellipse, y - m_ellipse.Width / 2);
@@ -144,6 +223,5 @@ namespace Lissajous
                 return (double)value * 2;
             }
         }
-
     }
 }
