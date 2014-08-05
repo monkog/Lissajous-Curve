@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,10 +46,6 @@ namespace Lissajous
         /// Time phase 
         /// </summary>
         private double Phase { get; set; }
-        /// <summary>
-        /// Lissajous curve to draw
-        /// </summary>
-        //Polyline m_line;
 
         public static readonly DependencyProperty AProperty
             = DependencyProperty.Register("A", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
@@ -61,6 +58,9 @@ namespace Lissajous
             Loaded += MainWindow_Loaded;
         }
 
+        /// <summary>
+        /// Sets up timer and binding
+        /// </summary>
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             setBinding();
@@ -72,6 +72,9 @@ namespace Lissajous
             SizeChanged += MainWindow_SizeChanged;
         }
 
+        /// <summary>
+        /// Updates the phase after timer tick
+        /// </summary>
         void m_timer_Tick(object sender, EventArgs e)
         {
             Phase += 0.01;
@@ -94,30 +97,53 @@ namespace Lissajous
             Binding aBinding = new Binding("ActualWidth");
             aBinding.Source = m_canvas;
             aBinding.Mode = BindingMode.OneWay;
+            aBinding.Converter = new AmplitudeConverter();
             SetBinding(AProperty, aBinding);
 
             Binding bBinding = new Binding("ActualHeight");
             bBinding.Source = m_canvas;
             bBinding.Mode = BindingMode.OneWay;
+            bBinding.Converter = new AmplitudeConverter();
             SetBinding(BProperty, bBinding);
         }
 
         /// <summary>
-        /// Lissajous curve is a graph of parametric equations:
-        /// x = Asin(at + delta), y = Bsin(bt), 
+        /// Draws the curve and moves the ellipse
         /// </summary>
+        /// <remarks>
+        /// Lissajous curve is a graph of parametric equations:
+        /// x = Asin(at + delta), y = Bsin(bt)
+        /// </remarks>
         private void moveEllipse()
         {
             double delta = ((B - 1) / B) * (Math.PI / 2);
             double x, y;
 
-            x = A / 2 * Math.Sin(2 * Phase + delta) + A / 2;
-            y = B / 2 * Math.Sin(5 * Phase) + B / 2;
+            x = A * Math.Sin(2 * Phase + delta) + A;
+            y = B * Math.Sin(5 * Phase) + B;
 
-            Canvas.SetLeft(m_ellipse, x);
-            Canvas.SetTop(m_ellipse, y);
+            Canvas.SetLeft(m_ellipse, x - m_ellipse.Width / 2);
+            Canvas.SetTop(m_ellipse, y - m_ellipse.Width / 2);
 
-            m_line.Points.Add(new Point(x + m_ellipse.Width / 2, y + m_ellipse.Width / 2));
+            m_line.Points.Add(new Point(x, y));
         }
+
+        /// <summary>
+        /// Width and height to amplitude converter
+        /// </summary>
+        [ValueConversion(typeof(double), typeof(int))]
+        public class AmplitudeConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return (int)((double)value / 2);
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return (double)value * 2;
+            }
+        }
+
     }
 }
