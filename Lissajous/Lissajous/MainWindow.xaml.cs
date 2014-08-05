@@ -45,6 +45,10 @@ namespace Lissajous
         /// Time phase 
         /// </summary>
         private double Phase { get; set; }
+        /// <summary>
+        /// Lissajous curve to draw
+        /// </summary>
+        //Polyline m_line;
 
         public static readonly DependencyProperty AProperty
             = DependencyProperty.Register("A", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
@@ -61,15 +65,16 @@ namespace Lissajous
         {
             setBinding();
             m_timer = new DispatcherTimer();
-            m_timer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+            m_timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             m_timer.Tick += m_timer_Tick;
             m_timer.Start();
+
             SizeChanged += MainWindow_SizeChanged;
         }
 
         void m_timer_Tick(object sender, EventArgs e)
         {
-            Phase += 0.07;
+            Phase += 0.01;
             moveEllipse();
         }
 
@@ -78,6 +83,7 @@ namespace Lissajous
         /// </summary>
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            m_line.Points.Clear();
         }
 
         /// <summary>
@@ -103,8 +109,15 @@ namespace Lissajous
         private void moveEllipse()
         {
             double delta = ((B - 1) / B) * (Math.PI / 2);
-            Canvas.SetLeft(m_ellipse, A * Math.Sin((Canvas.GetLeft(m_ellipse) + m_ellipse.Width / 2) * Phase / 1000 + delta));
-            Canvas.SetTop(m_ellipse, B * Math.Sin((Canvas.GetTop(m_ellipse) + m_ellipse.Height / 2) * Phase / 1000));
+            double x, y;
+
+            x = A / 2 * Math.Sin(2 * Phase + delta) + A / 2;
+            y = B / 2 * Math.Sin(5 * Phase) + B / 2;
+
+            Canvas.SetLeft(m_ellipse, x);
+            Canvas.SetTop(m_ellipse, y);
+
+            m_line.Points.Add(new Point(x + m_ellipse.Width / 2, y + m_ellipse.Width / 2));
         }
     }
 }
