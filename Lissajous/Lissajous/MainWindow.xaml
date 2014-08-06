@@ -5,7 +5,7 @@
     <Grid>
         <Slider Name="m_aSlider" Orientation="Vertical" Margin="0,0,485,20" Minimum="0" Maximum="10" Value="2" TickFrequency="1" IsSnapToTickEnabled="True" />
         <Slider Name="m_bSlider" Orientation="Vertical" Margin="32,0,453,20" Minimum="0" Maximum="10" Value="5" TickFrequency="1" IsSnapToTickEnabled="True" />
-        <Slider Name="m_fadeSlider" Orientation="Vertical" Margin="64,0,423,20" Minimum="0" Maximum="100" Value="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+        <Slider Name="m_fadeSlider" Orientation="Vertical" Margin="64,0,423,20" Minimum="0" Maximum="1000" Value="500" TickFrequency="1" IsSnapToTickEnabled="True" />
         <Slider Name="m_speedSlider" Orientation="Vertical" Margin="94,0,392,20" Minimum="1" Maximum="49" Value="10" TickFrequency="2" IsSnapToTickEnabled="True" IsDirectionReversed="True" />
         <Label Name="m_aLabel" Content="a" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,0" />
         <Label Name="m_bLabel" Content="b" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="37,0,0,0" />

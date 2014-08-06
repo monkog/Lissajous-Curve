@@ -132,7 +132,7 @@ namespace Lissajous
         /// </summary>
         private void m_speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //m_timer.Interval = TimeSpan.FromMilliseconds(e.NewValue);
+            m_timer.Interval = TimeSpan.FromMilliseconds(e.NewValue);
         }
 
         /// <summary>
@@ -205,6 +205,9 @@ namespace Lissajous
             Canvas.SetTop(m_ellipse, y - m_ellipse.Width / 2);
 
             m_line.Points.Add(new Point(x, y));
+
+            while (m_line.Points.Count > Fade)
+                m_line.Points.RemoveAt(0);
         }
 
         /// <summary>
