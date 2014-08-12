@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Lissajous
@@ -20,7 +11,7 @@ namespace Lissajous
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Variables and Properties
         /// <summary>
@@ -64,15 +55,24 @@ namespace Lissajous
             set { SetValue(FadeProperty, value); }
         }
         /// <summary>
-        /// Speed value
+        /// Keeps track of bound slider value
         /// </summary>
-        private int Speed
+        private double m_milliseconds;
+        /// <summary>
+        /// Gets or sets current timespan
+        /// </summary>
+        public double Milliseconds
         {
-            get { return (int)GetValue(SpeedProperty); }
-            set { SetValue(SpeedProperty, value); }
+            get { return m_milliseconds; }
+            set
+            {
+                m_milliseconds = value;
+                NotifyPropertyChanged("Milliseconds");
+                m_timer.Interval = TimeSpan.FromMilliseconds(m_milliseconds);
+            }
         }
         /// <summary>
-        /// Timer to keep track of moving Ellipse
+        /// Helper class for managing DispatcherTimer and binding to its Interval property
         /// </summary>
         private DispatcherTimer m_timer;
         /// <summary>
@@ -80,6 +80,8 @@ namespace Lissajous
         /// </summary>
         private double Phase { get; set; }
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region DependencyProperties
         public static readonly DependencyProperty AProperty
@@ -92,8 +94,6 @@ namespace Lissajous
             = DependencyProperty.Register("b", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static DependencyProperty FadeProperty
             = DependencyProperty.Register("Fade", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
-        public static readonly DependencyProperty SpeedProperty
-            = DependencyProperty.Register("Speed", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         #endregion
 
         public MainWindow()
@@ -105,34 +105,25 @@ namespace Lissajous
         /// <summary>
         /// Sets up timer and binding
         /// </summary>
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             setAmplitudeBinding();
             setSliderBindings();
             m_timer = new DispatcherTimer();
-            m_timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             m_timer.Tick += m_timer_Tick;
             m_timer.Start();
+            Milliseconds = 10;
 
             SizeChanged += MainWindow_SizeChanged;
-            m_speedSlider.ValueChanged += m_speedSlider_ValueChanged;
         }
 
         /// <summary>
         /// Updates the phase after timer tick
         /// </summary>
-        void m_timer_Tick(object sender, EventArgs e)
+        private void m_timer_Tick(object sender, EventArgs e)
         {
-            Phase += 0.01;
+            Phase += 0.02;
             moveEllipse();
-        }
-
-        /// <summary>
-        /// Updates time tick interval
-        /// </summary>
-        private void m_speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            m_timer.Interval = TimeSpan.FromMilliseconds(e.NewValue);
         }
 
         /// <summary>
@@ -169,7 +160,6 @@ namespace Lissajous
             setSimpleBinding(aProperty, "Value", m_aSlider);
             setSimpleBinding(bProperty, "Value", m_bSlider);
             setSimpleBinding(FadeProperty, "Value", m_fadeSlider);
-            setSimpleBinding(SpeedProperty, "Value", m_speedSlider);
         }
 
         /// <summary>
@@ -184,6 +174,16 @@ namespace Lissajous
             binding.Mode = BindingMode.OneWay;
             binding.Source = source;
             SetBinding(dp, binding);
+        }
+
+        /// <summary>
+        /// Notifies that a property's value has changed
+        /// </summary>
+        /// <param name="property">Property name</param>
+        private void NotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
         /// <summary>
