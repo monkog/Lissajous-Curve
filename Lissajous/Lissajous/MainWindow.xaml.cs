@@ -68,7 +68,6 @@ namespace Lissajous
             {
                 m_milliseconds = value;
                 NotifyPropertyChanged("Milliseconds");
-                m_timer.Interval = TimeSpan.FromMilliseconds(m_milliseconds);
             }
         }
         /// <summary>
@@ -100,6 +99,8 @@ namespace Lissajous
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
+            m_aSlider.ValueChanged += ClearPoints;
+            m_bSlider.ValueChanged += ClearPoints;
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Lissajous
             m_timer.Start();
             Milliseconds = 10;
 
-            SizeChanged += MainWindow_SizeChanged;
+            SizeChanged += ClearPoints;
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Lissajous
         /// <summary>
         /// Clears all previously drawn paths
         /// </summary>
-        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        void ClearPoints(object sender, EventArgs e)
         {
             m_line.Points.Clear();
         }
@@ -184,6 +185,7 @@ namespace Lissajous
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
+            m_timer.Interval = TimeSpan.FromMilliseconds(m_milliseconds);
         }
 
         /// <summary>
