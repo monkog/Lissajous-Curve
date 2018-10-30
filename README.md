@@ -3,26 +3,19 @@
 
 Lissajous curve represents a harmonic motion. It is described by the parametric equations:
 
-$x=A\sin(at+\delta )$ 
-$y=B\sin(bt)$
+![equation](http://latex.codecogs.com/png.latex?%5C%5Cx%3DA%5Csin%28at&plus;%5Cdelta%29%20%5C%5Cy%3DB%5Csin%28bt%29)
 
 
 ## Examples
 ![](./.Docs/Curve.JPG)
 ### Line
-$a = 1$
-$b = 1$
-$δ = 0$
+![equation](http://latex.codecogs.com/gif.latex?%5Cdpi%7B130%7D%20a%3D1%2Cb%3D1%2C%5Cdelta%3D0)
 ![](./.Docs/a1b1d0.JPG)
 ### Ellipse
-$a = 1$
-$b = 1$
-$δ \neq 0$
+![equation](http://latex.codecogs.com/gif.latex?%5Cdpi%7B130%7D%20a%3D1%2Cb%3D1%2C%5Cdelta%5Cneq0)
 ![](./.Docs/a1b1.JPG)
 ### Parabola
-$a = 2$
-$b = 1$
-$δ = π / 2$
+![equation](http://latex.codecogs.com/png.latex?%5Cdpi%7B130%7D%20%5C%5Ca%20%3D%201%2C%20b%20%3D%201%20%2C%5Cdelta%20%3D%5Cfrac%7B%5Cpi%7D%7B2%7D)
 ![](./.Docs/a2b1.JPG)
 
 ## :link: Useful links

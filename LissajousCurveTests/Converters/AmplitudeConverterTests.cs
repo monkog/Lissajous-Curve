@@ -1,24 +1,24 @@
 ﻿using LissajousCurve.Converters;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace LissajousCurveTests.Converters
 {
-	[TestClass]
+	[TestFixture]
 	public class AmplitudeConverterTests
 	{
 		private AmplitudeConverter _unitUnderTest;
 
-		[TestInitialize]
+		[SetUp]
 		public void Initialize()
 		{
 			_unitUnderTest = new AmplitudeConverter();
 		}
 
-		[TestMethod]
-		[DataRow(10, 5)]
-		[DataRow(10.5, 5)]
-		[DataRow(0, 0)]
-		[DataRow(-3.5, -1)]
+		[Test]
+		[TestCase(10, 5)]
+		[TestCase(10.5, 5)]
+		[TestCase(0, 0)]
+		[TestCase(-3.5, -1)]
 		public void Convert_Size_Amplitude(double value, int amplitude)
 		{
 			var result = _unitUnderTest.Convert(value, null, null, null);
@@ -26,10 +26,10 @@ namespace LissajousCurveTests.Converters
 			Assert.AreEqual(amplitude, result);
 		}
 
-		[TestMethod]
-		[DataRow(10, 20)]
-		[DataRow(0, 0)]
-		[DataRow(-3, -6)]
+		[Test]
+		[TestCase(10, 20)]
+		[TestCase(0, 0)]
+		[TestCase(-3, -6)]
 		public void ConvertBack_Amplitude_Size(int amplitude, double value)
 		{
 			var result = _unitUnderTest.ConvertBack(amplitude, null, null, null);

@@ -1,21 +1,21 @@
 ﻿using System.Windows;
 using LissajousCurve;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace LissajousCurveTests
 {
-	[TestClass]
+	[TestFixture]
 	public class CurveTests
 	{
 		private Curve _unitUnderTest;
 
-		[TestInitialize]
+		[SetUp]
 		public void Initialize()
 		{
 			_unitUnderTest = new Curve();
 		}
 
-		[TestMethod]
+		[Test]
 		public void Ctor_NoParams_DefaultValuesSet()
 		{
 			var unitUnderTest = new Curve();
@@ -27,7 +27,7 @@ namespace LissajousCurveTests
 			Assert.IsNotNull(unitUnderTest.Points);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Ctor_Params_PropertiesSet()
 		{
 			var unitUnderTest = new Curve(3, 9, 77, 2);
@@ -39,7 +39,7 @@ namespace LissajousCurveTests
 			Assert.IsNotNull(unitUnderTest.Points);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SetA_Always_PointsCollectionCleared()
 		{
 			_unitUnderTest.Points.Add(new Point(10, 10));
@@ -49,7 +49,7 @@ namespace LissajousCurveTests
 			Assert.AreEqual(0, _unitUnderTest.Points.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SetB_Always_PointsCollectionCleared()
 		{
 			_unitUnderTest.Points.Add(new Point(10, 10));
@@ -59,7 +59,7 @@ namespace LissajousCurveTests
 			Assert.AreEqual(0, _unitUnderTest.Points.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SetDelta_Always_PointsCollectionCleared()
 		{
 			_unitUnderTest.Points.Add(new Point(10, 10));
@@ -69,7 +69,7 @@ namespace LissajousCurveTests
 			Assert.AreEqual(0, _unitUnderTest.Points.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void SetAmplitude_Always_PointsCollectionCleared()
 		{
 			_unitUnderTest.Points.Add(new Point(10, 10));
@@ -79,7 +79,7 @@ namespace LissajousCurveTests
 			Assert.AreEqual(0, _unitUnderTest.Points.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Move_Always_PointAdded()
 		{
 			_unitUnderTest.Move(0.1);
@@ -87,7 +87,7 @@ namespace LissajousCurveTests
 			Assert.AreEqual(1, _unitUnderTest.Points.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Move_Always_ReturnsLatestPoint()
 		{
 			_unitUnderTest.SetAmplitude(2, 2);
