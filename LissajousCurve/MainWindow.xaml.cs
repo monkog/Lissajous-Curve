@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
-using Lissajous.Converters;
+using LissajousCurve.Converters;
 
-namespace Lissajous
+namespace LissajousCurve
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

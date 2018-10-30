@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lissajous\Lissajous.csproj">
+    <ProjectReference Include="..\LissajousCurve\LissajousCurve.csproj">
       <Project>{f9c423b4-cedd-4649-a729-e2baab3f6df4}</Project>
-      <Name>Lissajous</Name>
+      <Name>LissajousCurve</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

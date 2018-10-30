@@ -1,4 +1,4 @@
-﻿using Lissajous.Converters;
+﻿using LissajousCurve.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LissajousCurveTests.Converters
