@@ -15,6 +15,8 @@ namespace LissajousCurve
 
 		private int _b;
 
+		private double _delta;
+
 		private int _fade;
 
 		private PointCollection _points;
@@ -67,6 +69,20 @@ namespace LissajousCurve
 		}
 
 		/// <summary>
+		/// Gets or sets the δ parameter of the curve.
+		/// </summary>
+		public double Delta
+		{
+			get { return _delta; }
+			set
+			{
+				_delta = value;
+				OnPropertyChanged();
+				Points.Clear();
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the Collection of points of this curve being displayed.
 		/// </summary>
 		public PointCollection Points
@@ -85,10 +101,12 @@ namespace LissajousCurve
 		/// <param name="a">A parameter of the curve.</param>
 		/// <param name="b">B parameter of the curve.</param>
 		/// <param name="fade">The length of the curve being displayed.</param>
-		public Curve(int a = 2, int b = 6, int fade = 500)
+		/// <param name="delta">Delta parameter of the curve.</param>
+		public Curve(int a = 2, int b = 6, int fade = 500, double delta = 0)
 		{
 			_a = a;
 			_b = b;
+			_delta = delta;
 			Fade = fade;
 			Points = new PointCollection();
 		}
@@ -97,7 +115,7 @@ namespace LissajousCurve
 		/// Moves the curve.
 		/// </summary>
 		/// <remarks>
-		/// x = A * sin(a * t + delta), y = B * sin(b * t)
+		/// x = A * sin(a * t + δ), y = B * sin(b * t)
 		/// A - horizontal amplitude
 		/// B - vertical amplitude
 		/// </remarks>
@@ -105,9 +123,7 @@ namespace LissajousCurve
 		/// <returns>Current position.</returns>
 		public Point Move(double phase)
 		{
-			var delta = ((_verticalAmplitude - 1.0) / _verticalAmplitude) * (Math.PI / 2);
-
-			var x = _horizontalAmplitude * Math.Sin(A * phase + delta) + _horizontalAmplitude;
+			var x = _horizontalAmplitude * Math.Sin(A * phase + Delta) + _horizontalAmplitude;
 			var y = _verticalAmplitude * Math.Sin(B * phase) + _verticalAmplitude;
 
 			Points.Add(new Point(x, y));

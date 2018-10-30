@@ -23,17 +23,19 @@ namespace LissajousCurveTests
 			Assert.AreEqual(2, unitUnderTest.A);
 			Assert.AreEqual(6, unitUnderTest.B);
 			Assert.AreEqual(500, unitUnderTest.Fade);
+			Assert.AreEqual(0, unitUnderTest.Delta);
 			Assert.IsNotNull(unitUnderTest.Points);
 		}
 
 		[TestMethod]
 		public void Ctor_Params_PropertiesSet()
 		{
-			var unitUnderTest = new Curve(3, 9, 77);
+			var unitUnderTest = new Curve(3, 9, 77, 2);
 
 			Assert.AreEqual(3, unitUnderTest.A);
 			Assert.AreEqual(9, unitUnderTest.B);
 			Assert.AreEqual(77, unitUnderTest.Fade);
+			Assert.AreEqual(2, unitUnderTest.Delta);
 			Assert.IsNotNull(unitUnderTest.Points);
 		}
 
@@ -53,6 +55,16 @@ namespace LissajousCurveTests
 			_unitUnderTest.Points.Add(new Point(10, 10));
 
 			_unitUnderTest.B = 10;
+
+			Assert.AreEqual(0, _unitUnderTest.Points.Count);
+		}
+
+		[TestMethod]
+		public void SetDelta_Always_PointsCollectionCleared()
+		{
+			_unitUnderTest.Points.Add(new Point(10, 10));
+
+			_unitUnderTest.Delta = 10;
 
 			Assert.AreEqual(0, _unitUnderTest.Points.Count);
 		}
