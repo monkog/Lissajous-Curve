@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
+using Lissajous.Converters;
 
 namespace Lissajous
 {
@@ -216,23 +217,6 @@ namespace Lissajous
 
             while (Line.Points.Count > Fade)
                 Line.Points.RemoveAt(0);
-        }
-
-        /// <summary>
-        /// Width and height to amplitude converter
-        /// </summary>
-        [ValueConversion(typeof(double), typeof(int))]
-        public class AmplitudeConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return (int)((double)value / 2);
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return (double)value * 2;
-            }
         }
     }
 }

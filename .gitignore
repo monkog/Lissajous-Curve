@@ -9,6 +9,7 @@ Desktop.ini
 bin/
 obj/
 .vs/
+packages/
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
