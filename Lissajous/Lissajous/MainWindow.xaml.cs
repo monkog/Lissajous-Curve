@@ -22,6 +22,7 @@ namespace Lissajous
             get { return (int)GetValue(AProperty); }
             set { SetValue(AProperty, value); }
         }
+
         /// <summary>
         /// Height amplitude
         /// </summary>
@@ -30,22 +31,25 @@ namespace Lissajous
             get { return (int)GetValue(BProperty); }
             set { SetValue(BProperty, value); }
         }
+
         /// <summary>
         /// a value
         /// </summary>
-        private int a
+        private int _a
         {
-            get { return (int)GetValue(aProperty); }
-            set { SetValue(aProperty, value); }
+            get { return (int)GetValue(_aProperty); }
+            set { SetValue(_aProperty, value); }
         }
+
         /// <summary>
         /// b value
         /// </summary>
-        private int b
+        private int _b
         {
-            get { return (int)GetValue(bProperty); }
-            set { SetValue(bProperty, value); }
+            get { return (int)GetValue(_bProperty); }
+            set { SetValue(_bProperty, value); }
         }
+
         /// <summary>
         /// Fade value
         /// </summary>
@@ -54,26 +58,29 @@ namespace Lissajous
             get { return (int)GetValue(FadeProperty); }
             set { SetValue(FadeProperty, value); }
         }
+
         /// <summary>
         /// Keeps track of bound slider value
         /// </summary>
-        private double m_milliseconds;
+        private double _milliseconds;
+
         /// <summary>
         /// Gets or sets current timespan
         /// </summary>
         public double Milliseconds
         {
-            get { return m_milliseconds; }
+            get { return _milliseconds; }
             set
             {
-                m_milliseconds = value;
+                _milliseconds = value;
                 NotifyPropertyChanged("Milliseconds");
             }
         }
         /// <summary>
         /// Helper class for managing DispatcherTimer and binding to its Interval property
         /// </summary>
-        private DispatcherTimer m_timer;
+        private DispatcherTimer _timer;
+
         /// <summary>
         /// Time phase 
         /// </summary>
@@ -87,10 +94,10 @@ namespace Lissajous
             = DependencyProperty.Register("A", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static readonly DependencyProperty BProperty
             = DependencyProperty.Register("B", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
-        public static readonly DependencyProperty aProperty
-            = DependencyProperty.Register("a", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
-        public static readonly DependencyProperty bProperty
-            = DependencyProperty.Register("b", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static readonly DependencyProperty _aProperty
+            = DependencyProperty.Register("_a", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+        public static readonly DependencyProperty _bProperty
+            = DependencyProperty.Register("_b", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static DependencyProperty FadeProperty
             = DependencyProperty.Register("Fade", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         #endregion
@@ -99,8 +106,8 @@ namespace Lissajous
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
-            m_aSlider.ValueChanged += ClearPoints;
-            m_bSlider.ValueChanged += ClearPoints;
+            ASlider.ValueChanged += ClearPoints;
+            BSlider.ValueChanged += ClearPoints;
         }
 
         /// <summary>
@@ -108,11 +115,11 @@ namespace Lissajous
         /// </summary>
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            setAmplitudeBinding();
-            setSliderBindings();
-            m_timer = new DispatcherTimer();
-            m_timer.Tick += m_timer_Tick;
-            m_timer.Start();
+            SetAmplitudeBinding();
+            SetSliderBindings();
+            _timer = new DispatcherTimer();
+            _timer.Tick += TimerTick;
+            _timer.Start();
             Milliseconds = 10;
 
             SizeChanged += ClearPoints;
@@ -121,10 +128,10 @@ namespace Lissajous
         /// <summary>
         /// Updates the phase after timer tick
         /// </summary>
-        private void m_timer_Tick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             Phase += 0.02;
-            moveEllipse();
+            MoveEllipse();
         }
 
         /// <summary>
@@ -132,22 +139,22 @@ namespace Lissajous
         /// </summary>
         void ClearPoints(object sender, EventArgs e)
         {
-            m_line.Points.Clear();
+            Line.Points.Clear();
         }
 
         /// <summary>
         /// Sets binding to A and B
         /// </summary>
-        private void setAmplitudeBinding()
+        private void SetAmplitudeBinding()
         {
             Binding aBinding = new Binding("ActualWidth");
-            aBinding.Source = m_canvas;
+            aBinding.Source = Canvas;
             aBinding.Mode = BindingMode.OneWay;
             aBinding.Converter = new AmplitudeConverter();
             SetBinding(AProperty, aBinding);
 
             Binding bBinding = new Binding("ActualHeight");
-            bBinding.Source = m_canvas;
+            bBinding.Source = Canvas;
             bBinding.Mode = BindingMode.OneWay;
             bBinding.Converter = new AmplitudeConverter();
             SetBinding(BProperty, bBinding);
@@ -156,11 +163,11 @@ namespace Lissajous
         /// <summary>
         /// Sets a, b, fade and speed bindings
         /// </summary>
-        private void setSliderBindings()
+        private void SetSliderBindings()
         {
-            setSimpleBinding(aProperty, "Value", m_aSlider);
-            setSimpleBinding(bProperty, "Value", m_bSlider);
-            setSimpleBinding(FadeProperty, "Value", m_fadeSlider);
+            SetSimpleBinding(_aProperty, "Value", ASlider);
+            SetSimpleBinding(_bProperty, "Value", BSlider);
+            SetSimpleBinding(FadeProperty, "Value", FadeSlider);
         }
 
         /// <summary>
@@ -169,7 +176,7 @@ namespace Lissajous
         /// <param name="dp">Dependency property</param>
         /// <param name="path">Binding path</param>
         /// <param name="source">Binding source</param>
-        private void setSimpleBinding(DependencyProperty dp, string path, object source)
+        private void SetSimpleBinding(DependencyProperty dp, string path, object source)
         {
             Binding binding = new Binding(path);
             binding.Mode = BindingMode.OneWay;
@@ -183,9 +190,8 @@ namespace Lissajous
         /// <param name="property">Property name</param>
         private void NotifyPropertyChanged(string property)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            m_timer.Interval = TimeSpan.FromMilliseconds(m_milliseconds);
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+			_timer.Interval = TimeSpan.FromMilliseconds(_milliseconds);
         }
 
         /// <summary>
@@ -195,21 +201,21 @@ namespace Lissajous
         /// Lissajous curve is a graph of parametric equations:
         /// x = Asin(at + delta), y = Bsin(bt)
         /// </remarks>
-        private void moveEllipse()
+        private void MoveEllipse()
         {
             double delta = ((B - 1) / B) * (Math.PI / 2);
             double x, y;
 
-            x = A * Math.Sin(a * Phase + delta) + A;
-            y = B * Math.Sin(b * Phase) + B;
+            x = A * Math.Sin(_a * Phase + delta) + A;
+            y = B * Math.Sin(_b * Phase) + B;
 
-            Canvas.SetLeft(m_ellipse, x - m_ellipse.Width / 2);
-            Canvas.SetTop(m_ellipse, y - m_ellipse.Width / 2);
+            Canvas.SetLeft(Ellipse, x - Ellipse.Width / 2);
+            Canvas.SetTop(Ellipse, y - Ellipse.Width / 2);
 
-            m_line.Points.Add(new Point(x, y));
+            Line.Points.Add(new Point(x, y));
 
-            while (m_line.Points.Count > Fade)
-                m_line.Points.RemoveAt(0);
+            while (Line.Points.Count > Fade)
+                Line.Points.RemoveAt(0);
         }
 
         /// <summary>

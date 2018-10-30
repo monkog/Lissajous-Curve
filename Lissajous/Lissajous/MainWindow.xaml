@@ -1,20 +1,20 @@
 ﻿<Window x:Class="Lissajous.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525" 
+        Title="Lissajous Curve" Height="350" Width="525" 
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <Slider Name="m_aSlider" Orientation="Vertical" Margin="0,0,485,20" Minimum="0" Maximum="10" Value="2" TickFrequency="1" IsSnapToTickEnabled="True" />
-        <Slider Name="m_bSlider" Orientation="Vertical" Margin="32,0,453,20" Minimum="0" Maximum="10" Value="5" TickFrequency="1" IsSnapToTickEnabled="True" />
-        <Slider Name="m_fadeSlider" Orientation="Vertical" Margin="64,0,423,20" Minimum="0" Maximum="1000" Value="500" TickFrequency="1" IsSnapToTickEnabled="True" />
-        <Slider Name="m_speedSlider" Orientation="Vertical" Margin="94,0,392,20" Minimum="1" Maximum="20" Value="{Binding Milliseconds}" IsDirectionReversed="True" />
-        <Label Name="m_aLabel" Content="a" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,0" />
-        <Label Name="m_bLabel" Content="b" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="37,0,0,0" />
-        <Label Name="m_fadeLabel" Content="Fade" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="57,0,0,0" />
-        <Label Name="m_speedLabel" Content="Speed" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="85,0,0,0" />
-        <Canvas Name="m_canvas" Margin="125,2,2,2" >
-            <Polyline Name="m_line" Stroke="Black" StrokeThickness="2"/>
-            <Ellipse Name="m_ellipse" Width="10" Height="10" Fill="Red"/>
+        <Slider Name="ASlider" Orientation="Vertical" Margin="0,0,485,20" Minimum="0" Maximum="10" Value="2" TickFrequency="1" IsSnapToTickEnabled="True" />
+        <Slider Name="BSlider" Orientation="Vertical" Margin="32,0,453,20" Minimum="0" Maximum="10" Value="5" TickFrequency="1" IsSnapToTickEnabled="True" />
+        <Slider Name="FadeSlider" Orientation="Vertical" Margin="64,0,423,20" Minimum="0" Maximum="1000" Value="500" TickFrequency="1" IsSnapToTickEnabled="True" />
+        <Slider Name="SpeedSlider" Orientation="Vertical" Margin="94,0,392,20" Minimum="1" Maximum="20" Value="{Binding Milliseconds}" IsDirectionReversed="True" />
+        <Label Name="ALabel" Content="a" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,0" />
+        <Label Name="BLabel" Content="b" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="37,0,0,0" />
+        <Label Name="FadeLabel" Content="Fade" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="57,0,0,0" />
+        <Label Name="SpeedLabel" Content="Speed" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="85,0,0,0" />
+        <Canvas Name="Canvas" Margin="125,2,2,2" >
+            <Polyline Name="Line" Stroke="Black" StrokeThickness="2"/>
+            <Ellipse Name="Ellipse" Width="10" Height="10" Fill="Red"/>
         </Canvas>
     </Grid>
 </Window>
