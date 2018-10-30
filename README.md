@@ -7,7 +7,7 @@ Lissajous curve represents a harmonic motion. It is described by the parametric 
 
 
 ## Examples
-![](./.Docs/Curve.JPG)
+![Alt Text](./.Docs/LissajousCurve.gif)
 ### Line
 ![equation](http://latex.codecogs.com/gif.latex?%5Cdpi%7B130%7D%20a%3D1%2Cb%3D1%2C%5Cdelta%3D0)
 ![](./.Docs/a1b1d0.JPG)
