@@ -13,6 +13,8 @@ namespace LissajousCurve
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+	    private Curve _curve;
+
         #region Variables and Properties
         /// <summary>
         /// Width amplitude
@@ -33,33 +35,6 @@ namespace LissajousCurve
         }
 
         /// <summary>
-        /// a value
-        /// </summary>
-        private int _a
-        {
-            get { return (int)GetValue(_aProperty); }
-            set { SetValue(_aProperty, value); }
-        }
-
-        /// <summary>
-        /// b value
-        /// </summary>
-        private int _b
-        {
-            get { return (int)GetValue(_bProperty); }
-            set { SetValue(_bProperty, value); }
-        }
-
-        /// <summary>
-        /// Fade value
-        /// </summary>
-        private int Fade
-        {
-            get { return (int)GetValue(FadeProperty); }
-            set { SetValue(FadeProperty, value); }
-        }
-
-        /// <summary>
         /// Keeps track of bound slider value
         /// </summary>
         private double _milliseconds;
@@ -74,6 +49,19 @@ namespace LissajousCurve
             {
                 _milliseconds = value;
                 NotifyPropertyChanged("Milliseconds");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets current timespan
+        /// </summary>
+        public Curve Curve
+        {
+            get { return _curve; }
+            set
+            {
+	            _curve = value;
+                NotifyPropertyChanged("Curve");
             }
         }
         /// <summary>
@@ -94,10 +82,6 @@ namespace LissajousCurve
             = DependencyProperty.Register("A", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static readonly DependencyProperty BProperty
             = DependencyProperty.Register("B", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
-        public static readonly DependencyProperty _aProperty
-            = DependencyProperty.Register("_a", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
-        public static readonly DependencyProperty _bProperty
-            = DependencyProperty.Register("_b", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         public static DependencyProperty FadeProperty
             = DependencyProperty.Register("Fade", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
         #endregion
@@ -116,11 +100,11 @@ namespace LissajousCurve
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             SetAmplitudeBinding();
-            SetSliderBindings();
             _timer = new DispatcherTimer();
             _timer.Tick += TimerTick;
             _timer.Start();
             Milliseconds = 10;
+			Curve = new Curve();
 
             SizeChanged += ClearPoints;
         }
@@ -161,30 +145,6 @@ namespace LissajousCurve
         }
 
         /// <summary>
-        /// Sets a, b, fade and speed bindings
-        /// </summary>
-        private void SetSliderBindings()
-        {
-            SetSimpleBinding(_aProperty, "Value", ASlider);
-            SetSimpleBinding(_bProperty, "Value", BSlider);
-            SetSimpleBinding(FadeProperty, "Value", FadeSlider);
-        }
-
-        /// <summary>
-        /// Universal function for setting a simple binding
-        /// </summary>
-        /// <param name="dp">Dependency property</param>
-        /// <param name="path">Binding path</param>
-        /// <param name="source">Binding source</param>
-        private void SetSimpleBinding(DependencyProperty dp, string path, object source)
-        {
-            Binding binding = new Binding(path);
-            binding.Mode = BindingMode.OneWay;
-            binding.Source = source;
-            SetBinding(dp, binding);
-        }
-
-        /// <summary>
         /// Notifies that a property's value has changed
         /// </summary>
         /// <param name="property">Property name</param>
@@ -206,15 +166,15 @@ namespace LissajousCurve
             double delta = ((B - 1) / B) * (Math.PI / 2);
             double x, y;
 
-            x = A * Math.Sin(_a * Phase + delta) + A;
-            y = B * Math.Sin(_b * Phase) + B;
+            x = A * Math.Sin(Curve.A * Phase + delta) + A;
+            y = B * Math.Sin(Curve.B * Phase) + B;
 
             Canvas.SetLeft(Ellipse, x - Ellipse.Width / 2);
             Canvas.SetTop(Ellipse, y - Ellipse.Width / 2);
 
             Line.Points.Add(new Point(x, y));
 
-            while (Line.Points.Count > Fade)
+            while (Line.Points.Count > Curve.Fade)
                 Line.Points.RemoveAt(0);
         }
     }
